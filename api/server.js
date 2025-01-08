@@ -13,14 +13,16 @@ import connectDB from "./config/database.js";
 const app = express();
 
 // Middleware
-const corsOptions = {
-  origin: process.env.NODE_ENV === "production" 
-    ? ["https://your-frontend-domain.com"] 
-    : "http://localhost:5173",
-  credentials: true
-};
-
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: [
+    "https://charupp-front-end.onrender.com",
+    "http://localhost:5173",  // Add your local frontend URL
+    "http://localhost:3000"   // Add any other development URLs you might use
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization", "x-requested-with"]
+}));
 app.use(express.json());
 app.use(cookieParser());
 
