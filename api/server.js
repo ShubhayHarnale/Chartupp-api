@@ -49,10 +49,15 @@ app.get("/", (req, res) => {
 });
 
 // Port configuration
-const port = 10000;
-app.listen(port, '0.0.0.0', () => {
+const port = process.env.PORT || 3000;
+console.log('Starting server...');
+console.log('PORT env variable:', process.env.PORT);
+
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
   console.log('Server is bound to 0.0.0.0');
   console.log('Environment:', process.env.NODE_ENV);
   console.log('MongoDB URI:', process.env.MONGO_URI ? 'Set' : 'Not Set');
+}).on('error', (err) => {
+  console.error('Server error:', err);
 });
