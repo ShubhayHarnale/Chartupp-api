@@ -5,16 +5,44 @@ import createError from "../utils/createError.js";
 
 export const register = async (req, res, next) => {
   try {
-    const hash = bcrypt.hashSync(req.body.password, 5);
+    const { username, email, password } = req.body;
+
+    // Basic validation
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: "Please provide all required fields" });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      return res.status(400).json({ error: "Username or email already exists" });
+    }
+
+    // Hash password
+    const hash = bcrypt.hashSync(password, 5);
+
+    // Create new user
     const newUser = new User({
-      ...req.body,
+      username,
+      email,
       password: hash,
     });
 
-    await newUser.save();
-    res.status(201).send("User has been created.");
+    // Save user
+    const savedUser = await newUser.save();
+    
+    // Return success response
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      user: {
+        id: savedUser._id,
+        username: savedUser.username,
+        email: savedUser.email
+      }
+    });
   } catch (err) {
-    next(err);
+    res.status(500).json({ error: "Error creating user" });
   }
 };
 
