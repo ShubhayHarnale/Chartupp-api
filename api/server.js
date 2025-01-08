@@ -43,13 +43,15 @@ app.use((err, req, res, next) => {
   return res.status(errorStatus).send(errorMessage);
 });
 
-const PORT = process.env.PORT || 8800;
-
-// Add a basic route for health check
+// Health check route
 app.get("/", (req, res) => {
   res.send("ChartUpp API is running");
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Backend server is running on port ${PORT}`);
+// Port configuration
+const port = process.env.PORT || 8800;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+  console.log('Environment:', process.env.NODE_ENV);
+  console.log('MongoDB URI:', process.env.MONGO_URI ? 'Set' : 'Not Set');
 });
