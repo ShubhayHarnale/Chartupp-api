@@ -15,8 +15,8 @@ const app = express();
 // Middleware
 const corsOptions = {
   origin: process.env.NODE_ENV === "production" 
-    ? ["https://your-frontend-domain.com"] // You'll update this with your actual frontend domain
-    : "http://localhost:5173", // Vite's default port
+    ? ["https://your-frontend-domain.com"] 
+    : "http://localhost:5173",
   credentials: true
 };
 
@@ -44,6 +44,12 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 8800;
-app.listen(PORT, () => {
+
+// Add a basic route for health check
+app.get("/", (req, res) => {
+  res.send("ChartUpp API is running");
+});
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Backend server is running on port ${PORT}`);
 });
